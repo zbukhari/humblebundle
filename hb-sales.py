@@ -1,6 +1,10 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
+# Programmer: Zahid Bukhari
+# URL: https://github.com/zbukhari/humblebundle/
+# Purpose: To look through sales at the Humble Bundle store
+
 import argparse
 from pprint import PrettyPrinter
 import urllib2
