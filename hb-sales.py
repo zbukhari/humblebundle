@@ -61,8 +61,15 @@ def get_page(url, items):
 	except OSError, e:
 		logging.warn('Unable to find cache file.  Okay for first run. {0:s}'.format(e))
 	else:
+		# Within a day
 		if age < 86400:
 			build_cache = False
+		# Older than 10 days
+		elif age > 86400 * 10:
+			logging.warn('Cache file {0:s} is older than 10 days'.format(filename))
+		# Older than 30 days
+		elif age > 86400 * 30:
+			logging.warn('Cache file {0:s} is older than 30 days - purging.'.format(filename))
 
 	# However if we want to rebuild the cache here we set it to true
 	if args.force:
@@ -188,15 +195,50 @@ def get_page(url, items):
 			if item.has_key(key):
 				items[item[u'machine_name']][key] = item[key]
 
-		if (item[u'sale_end'] - time.time()) > 864000:
-			items[item[u'machine_name']][u'human_sale_end'] = 'More than 10 days'
+		# News to me - some sale items don't have a sale_end.
+		if item.has_key(u'sale_end'):
+			if (item[u'sale_end'] - time.time()) > 864000:
+				items[item[u'machine_name']][u'human_sale_end'] = 'More than 10 days'
+			else:
+				items[item[u'machine_name']][u'human_sale_end'] = datetime.isoformat(datetime.fromtimestamp(item[u'sale_end']))
 		else:
-			items[item[u'machine_name']][u'human_sale_end'] = datetime.isoformat(datetime.fromtimestamp(item[u'sale_end']))
+			logging.warn('''{0} / {1} has no 'sale_end'.'''.format(item[u'human_name'], item[u'machine_name']))
+			items[ item[u'machine_name'] ][u'human_sale_end'] = 'No sale end date.'
+			items[ item[u'machine_name'] ][u'sale_end'] = 0xffffffff
 
+		# More news to me - some sale items don't have a price.
+		if not item.has_key(u'current_price'):
+			logging.warn('''{0} / {1} has no 'current_price'.'''.format(item[u'human_name'], item[u'machine_name']))
+
+			# Maybe it's listed on sale but is only available at full price
+			if item.has_key(u'full_price'):
+				logging.warn('''{0} / {1} has no 'current_price' but has a 'full_price'.  Using 'full_price' as 'current_price'.'''.format(item[u'human_name'], item[u'machine_name']))
+				items[ item[u'machine_name'] ][u'current_price'] = item[u'full_price']
+			else:
+				logging.warn('''{0} / {1} has no 'current_price' or 'full_price'.'''.format(item[u'human_name'], item[u'machine_name']))
+				items[ item[u'machine_name'] ][u'current_price'] = [ 0.00, 'USD' ]
+
+	# This was done to force a full pull down or something
 	if args.other:
 		return 0xffffffffffffffff
 	else:
 		return jsonData[u'num_pages']
+
+### Clean cache
+def clean_cache():
+	"""This cleans out cache files older than 30 days in the cache dir that end in ".json"."""
+
+	fileList = map(lambda f: os.path.sep.join([cache_dir, f]), filter(lambda f: f.endswith('.json'), filter(lambda f: (time.time() - os.path.getmtime(f)) > 86400 * 30, os.listdir(cache_dir))))
+
+	for f in fileList:
+		filename = os.path.sep.join([cache_dir, f])
+
+		try:
+			os.unlink(filename)
+		except OSError, e:
+			logging.error('Unable to unlink {0:s}: {1:s}'.format(filename, e))
+		else:
+			logging.info('Unlinked {0:s}'.format(filename))
 
 # We'll emulate a do while loop of sorts.  We'll reset pages after our first page.
 i = 0
@@ -259,7 +301,16 @@ for i in sorted_keys:
 		if k == 'other_links': # List of dictionaries
 			print '\tOther links:'
 			for tmpDict in v:
-				print '\t\t{0} : {1}'.format(unicode(tmpDict[u'other-link-title']).encode('utf-8'), unicode(tmpDict[u'other-link']).encode('utf-8'))
+				# In more news ... apparently other links can exist and not have details ... well I'll be.
+				# Traceback (most recent call last):
+				#  File "./hb-sales.py", line 301, in <module>
+				#    print '\t\t{0} : {1}'.format(unicode(tmpDict[u'other-link-title']).encode('utf-8'), unicode(tmpDict[u'other-link']).encode('utf-8'))
+				#KeyError: u'other-link-title'
+				if tmpDict.has_key(u'other-link-title'):
+					print '\t\t{0} : {1}'.format(unicode(tmpDict[u'other-link-title']).encode('utf-8'), unicode(tmpDict[u'other-link']).encode('utf-8'))
+				else:
+					print logging.warn('{0} has other_links but not other-link-title. Follow keys {1} - may pprint.'.format(items[i]['human_name'].encode('utf-8'), tmpDict.keys()))
+
 				# for (sub_k, sub_v) in tmpDict.iteritems():
 				# 	print '\t\t{0} : {1}'.format(unicode(sub_k).encode('utf-8'), unicode(sub_v).encode('utf-8'))
 	
