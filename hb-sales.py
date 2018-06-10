@@ -228,6 +228,7 @@ def getDetails(filename):
 def writeDetails(detailList):
 	"""This will sanitize and write out the details to hb-sales.json for happy bootstrappy fun"""
 
+	jsonData = {'total':len(detailList), 'rows':[]}
 	# We can't use for to pass by reference but boss mode activate!
 	for i in range(len(detailList)):
 		# items[item[u'machine_name']] = {}
@@ -235,12 +236,18 @@ def writeDetails(detailList):
 		# 	if item.has_key(key):
 		# 		items[item[u'machine_name']][key] = item[key]
 
+		# Creating an ID field
+		detailList[i][u'id'] = i
 		# Simple manipulations
 		detailList[i][u'current_price'] = ' '.join(map(str, detailList[i][u'current_price']))
-		detailList[i][u'delivery_methods'] = ', '.join(detailList[i][u'delivery_methods'])
-		detailList[i][u'platforms'] = ', '.join(detailList[i][u'platforms'])
-		if detailList[i].has_key(u'user_rating'):
-			detailList[i][u'user_rating'] = '''{steam_percent}% | {review_text}'''.format(**detailList[i][u'user_rating'])
+		### We're going to process these via JavaScript
+		# detailList[i][u'delivery_methods'] = ', '.join(detailList[i][u'delivery_methods'])
+		# detailList[i][u'platforms'] = ', '.join(detailList[i][u'platforms'])
+
+		if not detailList[i].has_key(u'user_rating'):
+			detailList[i][u'user_rating'] = None
+		# 	detailList[i][u'user_rating'] = '''{steam_percent}% | {review_text}'''.format(**detailList[i][u'user_rating'])
+		# else:
 
 		# News to me - some sale items don't have a sale_end.
 		if (detailList[i][u'sale_end'] - time.time()) > 864000:
@@ -248,9 +255,14 @@ def writeDetails(detailList):
 		else:
 			detailList[i][u'sale_end'] = datetime.isoformat(datetime.fromtimestamp(detailList[i][u'sale_end']))
 
+		jsonData['rows'].append(detailList[i])
+
 	try:
-		f = open('hb-sales.json', 'w')
-		f.write(json.dumps(detailList, indent=4))
+		f = open('hb-sales-json.js', 'w')
+		f.write('var rawJsonData = ')
+		# f.write(json.dumps(jsonData['rows'], indent=4))
+		f.write(json.dumps(jsonData, indent=4))
+		f.write(''';\nvar jsonData = rawJsonData['rows'];\n''')
 		f.close()
 	except IOError, e:
 		logging.error('Unable to write hb-sales.json file.  {0:s}.'.format(e))

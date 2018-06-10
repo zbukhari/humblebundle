@@ -1,140 +1,72 @@
-<!DOCTYPE html>
+<!doctypE html>
 <html lang="en">
 <head>
 	<!-- Required meta tags -->
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
-	<!-- Basic bootstrappy goodness begin -->
-	<link rel="stylesheet" href="bootstrap/dist/css/bootstrap.min.css" integrity="sha384-WskhaSGFgHYWDcbwN70/dfYBj47jz9qbsMId/iRN3ewGhXQFZCSftd1LZCfmhktB" crossorigin="anonymous">
-	<!-- Basic bootstrappy goodness finish -->
-	<link rel="stylesheet" href="bootstrap-table-master/dist/bootstrap-table.min.css">
-	<link rel="stylesheet" href="bootstrap-table-master/dist/extensions/filter-control/bootstrap-table-filter-control.css">
+	<!-- Local (development) -->
+	<!--
+	<link rel="stylesheet" href="assets/bootstrap-4.1.1/dist/css/bootstrap.min.css" integrity="sha384-WskhaSGFgHYWDcbwN70/dfYBj47jz9qbsMId/iRN3ewGhXQFZCSftd1LZCfmhktB" crossorigin="anonymous">
+	<link rel="stylesheet" href="assets/bootstrap-table-1.12.1/dist/bootstrap-table.min.css">
+	<link rel="stylesheet" href="assets/bootstrap-table-1.12.1/dist/extensions/filter-control/bootstrap-table-filter-control.css">
+	<link rel="stylesheet" href="assets/fontawesome-free-5.0.13/web-fonts-with-css/css/fontawesome-all.min.css">
+	-->
 
+	<!-- CDN -->
+	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css" integrity="sha384-WskhaSGFgHYWDcbwN70/dfYBj47jz9qbsMId/iRN3ewGhXQFZCSftd1LZCfmhktB" crossorigin="anonymous">
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.12.1/bootstrap-table.min.css">
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.12.1/extensions/filter-control/bootstrap-table-filter-control.css">
+	<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.13/css/all.css" integrity="sha384-DNOHZ68U8hZfKXOrtjWvjxusGo9WQnrNx2sqG0tfsghAvtVlRW3tvkXWZh58N9jp" crossorigin="anonymous">
+
+	<!-- Our stuff -->
 	<title>Humble Bundle easy browser</title>
 </head>
-<body>
-<table id="table" class="table table-hover table-dark"></table>
-<!--
-<table id="table" class="table table-hover table-dark" data-filter-control="true"></table>
-<td>1527440400.0</td>
-<td>Seasonal Soccer</td>
-<td>[3.19, u'USD']</td>
-<td>[u'steam']</td>
-<td>[u'windows']</td>
-<td></td>
-<td></td>
-<td>[{u'developer-name': u'F-games'}]</td>
-<td>DESC</td>
-		</tr>
+<body class="bg-dark">
+<div class="modal" id="viewMemberModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+					<span aria-hidden="true">&times;</span>
+				</button>
+				<h4 class="modal-title">TITAL</h4>
+			</div>
+			<div class="modal-body"></div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+			</div>
+		</div><!-- /.modal-content -->
+	</div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+
+<div class="container">
+	<div id="toolbar"></div>
+	<table id="table"></table>
+	<!-- <table id="table" class="table table-hover table-dark"></table> -->
+</div>
+
+<!-- Local (development)
+<script src="assets/jquery-3.3.1.min.js"></script>
+<script src="assets/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49"></script>
+<script src="assets/bootstrap-4.1.1/dist/js/bootstrap.min.js" integrity="sha384-smHYKdLADwkXOn1EmN1qk/HfnUcbVRZyYmZ4qpPea6sjB/pTJ0euyQp0Mk8ck+5T"></script>
+
+<script src="assets/bootstrap-table-1.12.1/dist/bootstrap-table.min.js"></script>
+<script src="assets/bootstrap-table-1.12.1/dist/locale/bootstrap-table-en-US.min.js"></script>
+<script src="assets/bootstrap-table-1.12.1/dist/extensions/filter-control/bootstrap-table-filter-control.min.js"></script>
 -->
-<!-- Basic bootstrappy goodness begin -->
-<!-- Full version of jquery is also supported -->
-<!-- <script src="jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script> -->
-<script src="jquery-3.3.1.min.js"></script>
-<!-- popper.js 1.14.3 -->
-<script src="popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
-<!-- Da bootstrap -->
-<script src="bootstrap/dist/js/bootstrap.min.js" integrity="sha384-smHYKdLADwkXOn1EmN1qk/HfnUcbVRZyYmZ4qpPea6sjB/pTJ0euyQp0Mk8ck+5T" crossorigin="anonymous"></script>
-<!-- Basic bootstrappy goodness finish -->
-<script src="bootstrap-table-master/dist/bootstrap-table.min.js"></script>
-<script src="bootstrap-table-master/dist/locale/bootstrap-table-en-US.min.js"></script>
-<script src="bootstrap-table-master/dist/extensions/filter-control/bootstrap-table-filter-control.min.js"></script>
 
-<script type="text/javascript">
-$('#table').bootstrapTable({
-	url: 'hb-sales.json',
-	search: false,
-	height: 700,
-	// I can't find a way to do a logical and across truth values return by the filter-control extension :'-(
-	filterControl: true,
-	filterShowClear: true,
-	filterStrictSearch: true,
-	showColumns: true,
-	// clear: 'glyphicon-trash icon-clear',
-	columns: [{
-		title: 'Sale end',
-		field: 'sale_end',
-		/*field: 'sale_end',
-		formatter: function (value) {
-			var date = new Date(value * 1000);
-			return date.toISOString();
-		},*/
-		sortable: true,
-	}, {
-		field: 'human_name',
-		title: 'Name',
-		searchable: true,
-		sortable: true,
-		filterControl: 'input',
-	}, {
-		field: 'current_price',
-		title: 'Price',
-		// formatter: function (value) { return value.join(' '); },
-		sortable: true,
-		filterControl: 'input',
-	}, {
-		field: 'delivery_methods',
-		title: 'Delivery method',
-		// formatter: function (value) { return value.join(', '); },
-		searchable: true,
-		filterControl: 'input',
-	}, {
-		field: 'platforms',
-		title: 'Platforms',
-		// formatter: function (value) { return value.join(', '); },
-		searchable: true,
-		filterControl: 'input',
-	}, {
-		field: 'user_rating',
-		title: 'User rating',
-		sortable: true,
-		searchable: true,
-		/* formatter: function (value, row, index, field) {
-			// if (value !== 'undefined')
-			if (value == null)
-				return null;
-			else
-				return value[0];
-		}, */
-		filterControl: 'input',
-/*
-		// formatter: function (value, row, index, field) {
-			// return '-';
-			// { percent positive, last 30 days, string, # of reviews }
-			// { "steam_percent": 56, "display_user_ratings": "steam_recent", "review_text": "Mixed", "steam_count": 25 }
-			// 69% of the 73 user reviews on Steam in the last 30 days are positive. 
-			if (typeof value !== 'undefined')
-				return '-undef-';
+<!-- CDN -->
+<script src="https://code.jquery.com/jquery-3.3.1.min.js" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js" integrity="sha384-smHYKdLADwkXOn1EmN1qk/HfnUcbVRZyYmZ4qpPea6sjB/pTJ0euyQp0Mk8ck+5T" crossorigin="anonymous"></script>
 
-			var str = '';
-			$.each(value, function(k, v) {
-				str += k + ' ' + v;
-			});
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.12.1/bootstrap-table.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.12.1/locale/bootstrap-table-en-US.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.12.1/extensions/filter-control/bootstrap-table-filter-control.min.js"></script>
 
-			// return str;
-			return typeof value;
-				// return value['review_text'] + ': ' + value['steam_percent'] + '% of the ' + value['steam_count'] + ' user reviews on Steam in the last 30 days are positive.';
-			//	return value;
-		},
-*/
-
-	}, ]
-/*	}, {
-		field: 'other_links',
-		title: 'Other links',
-	}, {
-		field: 'developers',
-		title: 'Developers',
-	}, {
-		field: 'system_requirements',
-		title: 'System requirements',
-	}, {
-		field: 'description',
-		title: 'Description',
-	},
-*/
-});
-</script>
+<!-- Our code -->
+<script src="hb-sales-json.js"></script><!-- This file is written when hb-sales.py is ran. -->
+<script src="hb-sales.js"></script>
 </body>
 </html>
