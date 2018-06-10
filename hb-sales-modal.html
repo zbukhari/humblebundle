@@ -1,28 +1,32 @@
-<!DOCTYPE html>
+<!doctypE html>
 <html lang="en">
 <head>
 	<!-- Required meta tags -->
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
-	<!-- Basic bootstrappy goodness begin -->
-	<link rel="stylesheet" href="bootstrap/dist/css/bootstrap.min.css" integrity="sha384-WskhaSGFgHYWDcbwN70/dfYBj47jz9qbsMId/iRN3ewGhXQFZCSftd1LZCfmhktB" crossorigin="anonymous">
-	<!-- Basic bootstrappy goodness finish -->
-	<link rel="stylesheet" href="bootstrap-table-master/dist/bootstrap-table.min.css">
-	<link rel="stylesheet" href="bootstrap-table-master/dist/extensions/filter-control/bootstrap-table-filter-control.css">
+	<!-- Local (development) -->
+	<link rel="stylesheet" href="assets/bootstrap-4.1.1/dist/css/bootstrap.min.css" integrity="sha384-WskhaSGFgHYWDcbwN70/dfYBj47jz9qbsMId/iRN3ewGhXQFZCSftd1LZCfmhktB" crossorigin="anonymous">
+	<link rel="stylesheet" href="assets/bootstrap-table-1.12.1/dist/bootstrap-table.min.css">
+	<link rel="stylesheet" href="assets/bootstrap-table-1.12.1/dist/extensions/filter-control/bootstrap-table-filter-control.css">
+	<link rel="stylesheet" href="assets/fontawesome-free-5.0.13/web-fonts-with-css/css/fontawesome-all.min.css">
 
+	<!-- CDN -->
+	<!--
+	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css" integrity="sha384-WskhaSGFgHYWDcbwN70/dfYBj47jz9qbsMId/iRN3ewGhXQFZCSftd1LZCfmhktB" crossorigin="anonymous">
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.12.1/bootstrap-table.min.css">
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.12.1/extensions/filter-control/bootstrap-table-filter-control.css">
+	-->
+
+	<!-- Font Awesome
+		When using fas, far, fal mean font awesome solid, regular, light respectively.
+	<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.13/css/all.css" integrity="sha384-DNOHZ68U8hZfKXOrtjWvjxusGo9WQnrNx2sqG0tfsghAvtVlRW3tvkXWZh58N9jp" crossorigin="anonymous">
+	-->
+
+	<!-- Our stuff -->
 	<title>Humble Bundle easy browser</title>
 </head>
-<!--
-<body>
-<div class="modal" id="modal" role="dialog">
-	<div class="modalTitle">TITLE</div>
-	<div class="modalBody">BODY</div>
-	<div class="modalFooter">
-		<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-	</div>
-</div>
--->
+<body class="bg-dark">
 <div class="modal" id="viewMemberModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
 	<div class="modal-dialog">
 		<div class="modal-content">
@@ -30,7 +34,7 @@
 				<button type="button" class="close" data-dismiss="modal" aria-label="Close">
 					<span aria-hidden="true">&times;</span>
 				</button>
-				<h4 class="modal-title"></h4>
+				<h4 class="modal-title">TITAL</h4>
 			</div>
 			<div class="modal-body"></div>
 			<div class="modal-footer">
@@ -39,135 +43,40 @@
 		</div><!-- /.modal-content -->
 	</div><!-- /.modal-dialog -->
 </div><!-- /.modal -->
-<table id="table" class="table table-hover table-dark"></table>
-<!-- Basic bootstrappy goodness begin -->
-<!-- Full version of jquery is also supported -->
-<!-- <script src="jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script> -->
-<script src="jquery-3.3.1.min.js"></script>
-<!-- popper.js 1.14.3 -->
-<script src="popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
-<!-- Da bootstrap -->
-<script src="bootstrap/dist/js/bootstrap.min.js" integrity="sha384-smHYKdLADwkXOn1EmN1qk/HfnUcbVRZyYmZ4qpPea6sjB/pTJ0euyQp0Mk8ck+5T" crossorigin="anonymous"></script>
-<!-- Basic bootstrappy goodness finish -->
-<!-- bootstrap-table goodness -->
-<script src="bootstrap-table-master/dist/bootstrap-table.min.js"></script>
-<script src="bootstrap-table-master/dist/locale/bootstrap-table-en-US.min.js"></script>
-<script src="bootstrap-table-master/dist/extensions/filter-control/bootstrap-table-filter-control.min.js"></script>
-<!-- bootstrap-table finish -->
-<!-- Our magic -->
-<script type="text/javascript">
-// Here we define functions to display larger data in a "modal" window.
-function operateFormatter(value, row, index) {
-	return [
-		'<a class="info btn btn-info btn-sm" data-unique-id="',row.id,'" data-toggle="modal" data-target="#modal',row.id,'">',
-		'<span class="glyphicon glyphicon-eye-open"></span>',
-		'</a>'
-	].join('');
-}
 
-window.showMeDaModal = {
-	'click .info': function (e, value, row, index) {
-		// $('#modalTitle').html('Description');
-		// alert(value);
-		// alert($('#modal').modal('show').find('.modalTitle').html('Description');
-		// alert('clicky fun yo');
-		// $('#modal').modal('show').find('.modalBody').html(value);
-		$('#viewMemberModal').modal('show').find('.modal-title').html('Description');
-		$('#viewMemberModal').modal('show').find('.modal-body').html(value);
-		// return;
-	}
-};
+<div class="container">
+	<div id="toolbar">
+		<button id="remove" class="btn btn-danger" disabled>
+			<i class="fas fa-trash-alt"></i> Delete
+		</button>
+	</div>
+	<table id="table"></table>
+	<!-- <table id="table" class="table table-hover table-dark"></table> -->
+</div>
 
-/*
-window.operateEvents = {
-    'click .info': function (e, value, row) {
-        $('#viewMemberModal').modal('show')
-        	.find('.modal-body').html('<pre>' + 
-            JSON.stringify(row, null, 4) + '</pre>');
-    }
-};
-*/
+<!-- Local (development) -->
+<!-- <script src="assets/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script> -->
+<script src="assets/jquery-3.3.1.min.js"></script>
+<script src="assets/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49"></script>
+<script src="assets/bootstrap-4.1.1/dist/js/bootstrap.min.js" integrity="sha384-smHYKdLADwkXOn1EmN1qk/HfnUcbVRZyYmZ4qpPea6sjB/pTJ0euyQp0Mk8ck+5T"></script>
 
-$('#table').bootstrapTable({
-	url: 'hb-sales.json',
-	search: false,
-	height: 700,
-	// I can't find a way to do a logical and across truth values return by the filter-control extension :'-(
-	filterControl: true,
-	filterShowClear: true,
-	filterStrictSearch: true,
-	showColumns: true,
-	// clear: 'glyphicon-trash icon-clear',
-	columns: [{
-		title: 'Sale end',
-		field: 'sale_end',
-		/*field: 'sale_end',
-		formatter: function (value) {
-			var date = new Date(value * 1000);
-			return date.toISOString();
-		},*/
-		sortable: true,
-	}, {
-		field: 'human_name',
-		title: 'Name',
-		searchable: true,
-		sortable: true,
-		filterControl: 'input',
-	}, {
-		field: 'current_price',
-		title: 'Price',
-		// formatter: function (value) { return value.join(' '); },
-		sortable: true,
-		filterControl: 'input',
-	}, {
-		field: 'delivery_methods',
-		title: 'Delivery method',
-		// formatter: function (value) { return value.join(', '); },
-		searchable: true,
-		filterControl: 'input',
-	}, {
-		field: 'platforms',
-		title: 'Platforms',
-		// formatter: function (value) { return value.join(', '); },
-		searchable: true,
-		filterControl: 'input',
-	}, {
-		field: 'user_rating',
-		title: 'User rating',
-		sortable: true,
-		searchable: true,
-		/* formatter: function (value, row, index, field) {
-			// if (value !== 'undefined')
-			if (value == null)
-				return null;
-			else
-				return value[0];
-		}, */
-		filterControl: 'input',
-	}, {
-		field: 'other_links',
-		title: 'Other links',
-		visible: false,
-	}, {
-		field: 'developers',
-		title: 'Developers',
-		visible: false,
-	}, {
-		field: 'system_requirements',
-		title: 'System requirements',
-		visible: false,
-	}, {
-		field: 'description',
-		title: 'Description',
-		// visible: false,
-		formatter: operateFormatter,
-		events: showMeDaModal, /* events: // http://bootstrap-table.wenzhixin.net.cn/documentation/  Example code: <th .. data-events="operateEvent"> var operateEvents = {'click .like': function (e, value, row, index) {}};  */
-	}, ]
-});
+<script src="assets/bootstrap-table-1.12.1/dist/bootstrap-table.min.js"></script>
+<script src="assets/bootstrap-table-1.12.1/dist/locale/bootstrap-table-en-US.min.js"></script>
+<script src="assets/bootstrap-table-1.12.1/dist/extensions/filter-control/bootstrap-table-filter-control.min.js"></script>
 
+<!-- CDN -->
+<!--
+<script src="https://code.jquery.com/jquery-3.3.1.min.js" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js" integrity="sha384-smHYKdLADwkXOn1EmN1qk/HfnUcbVRZyYmZ4qpPea6sjB/pTJ0euyQp0Mk8ck+5T" crossorigin="anonymous"></script>
 
-</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.12.1/bootstrap-table.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.12.1/locale/bootstrap-table-en-US.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.12.1/extensions/filter-control/bootstrap-table-filter-control.min.js"></script>
+-->
 
-
+<!-- Our code -->
+<script src="hb-sales-json.js"></script><!-- This file is written when hb-sales.py is ran. -->
+<script src="hb-sales.js"></script>
 </body>
 </html>
