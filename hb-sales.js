@@ -57,9 +57,6 @@ function detailFormatter(index, row, element) {
 	html += '<div align="center"><h1>Description</h1></div>\n\n';
 	html += row['description'] + '\n\n';
 
-	html += 'current_price: ' + row['current_price'][0] + '<br>\n\n';
-	html += 'full_price: ' + row['full_price'][0] + '<br>\n\n';
-
 	return html;
 }
 
