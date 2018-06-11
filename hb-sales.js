@@ -1,5 +1,5 @@
 // We're going to use this to compare dates.
-var dateNow = new Date(Date.now());
+var nowDate = new Date(Date.now());
 
 // Here we define functions to display larger data in a "modal" window.
 // I can't get the icons to work :-(  Not sure anyone really cares about my code but help would be appreciated! :-D
@@ -10,11 +10,11 @@ function getHeight() {
 // JavaScript has no strftime
 function saleEndDateFormatter(value, row, index) {
 	var date = new Date(value * 1000);
-	if(date <= dateNow) {
+	if(date <= nowDate) {
 		dateStr = '<p class="text-muted" data-toggle="tooltip" data-placement="bottom" title="Item is still available but at full price.">Sale&nbsp;expired';
 	} else {
 		var dateStr
-		if((date - dateNow) < 86400000)
+		if((date.getTime() - nowDate.getTime()) < 86400000)
 			dateStr = '<p class="text-danger" data-toggle="tooltip" data-placement="bottom" title="Less than 24 hours!">';
 		else
 			dateStr = '<p class="text-success">';
@@ -62,10 +62,15 @@ function detailFormatter(index, row, element) {
 
 function priceFormatter(value, row, index) {
 	var price;
-	if(Date(row['sale_end'] * 1000) <= Date(Date.now()))
-		price = row['full_price'].join('&nbsp')
-	else
-		price = value.join('&nbsp;');
+	var saleDate = new Date(row['sale_end'] * 1000);
+
+	if(saleDate.getTime() <= nowDate.getTime()) {
+		// price = row['full_price'].join('&nbsp')
+		price = row['full_price'][0]
+	} else {
+		// price = row['current_price'].join('&nbsp;');
+		price = row['current_price'][0];
+	}
 
 	return price;
 }
