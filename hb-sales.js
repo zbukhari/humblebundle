@@ -1,8 +1,53 @@
+// We're going to use this to compare dates.
+var dateNow = new Date(Date.now());
+
 // Here we define functions to display larger data in a "modal" window.
 // I can't get the icons to work :-(  Not sure anyone really cares about my code but help would be appreciated! :-D
 function getHeight() {
 	return $(window).height() - $('h1').outerHeight(true);
 }
+
+// JavaScript has no strftime
+function saleEndDateFormatter(value, row, index) {
+	var date = new Date(value * 1000);
+	if(date <= dateNow) {
+		dateStr = '<p class="text-muted" data-toggle="tooltip" data-placement="bottom" title="Item is still available but at full price.">Sale&nbsp;expired';
+	} else {
+		var dateStr
+		if((date - dateNow) < 86400000)
+			dateStr = '<p class="text-danger" data-toggle="tooltip" data-placement="bottom" title="Less than 24 hours!">';
+		else
+			dateStr = '<p class="text-success">';
+
+		// Y-m-d
+		dateStr += date.getFullYear() + '-';
+
+		if(date.getMonth() < 10)
+			dateStr += '0';
+		dateStr += date.getMonth() + '-';
+
+		if(date.getDate() < 10)
+			dateStr += '0';
+		dateStr += date.getDate() + 'T';
+
+		if(date.getHours() < 10)
+			dateStr += '0';
+		dateStr += date.getHours() + ':';
+
+		if(date.getMinutes() < 10)
+			dateStr += '0';
+		dateStr += date.getMinutes() + ':';
+
+		if(date.getSeconds() < 10)
+			dateStr += '0';
+		dateStr += date.getSeconds();
+	}
+
+	dateStr += '</p>';
+
+	return dateStr;
+}
+
 
 // Here we will make a singular detailed listing of information for the user
 // Currently this means system requirements, description, etc
@@ -15,11 +60,21 @@ function detailFormatter(index, row, element) {
 	return html;
 }
 
+function priceFormatter(value, row, index) {
+	var price;
+	if(Date(row['sale_end'] * 1000) <= Date(Date.now()))
+		price = row['full_price'].join('&nbsp')
+	else
+		price = value.join('&nbsp;');
+
+	return price;
+}
+
 function userRatingFormatter(value, row, index) {
 	var html = '-';
 
 	if(value)
-		html = value['steam_percent'] + '% | ' + value['review_text'];
+		html = value['steam_percent'] + '%&nbsp;|&nbsp;' + value['review_text'].replace(' ','&nbsp;');
 
 	return html;
 }
@@ -93,7 +148,7 @@ $('#table').bootstrapTable({
 	data: jsonData,
 	search: false,
 	// height: 700,
-	height: getHeight(),
+	// height: getHeight(),
 	// I can't find a way to do a logical and across truth values return by the filter-control extension :'-(
 	iconsPrefix: 'fas',
 	icons: {
@@ -125,11 +180,7 @@ $('#table').bootstrapTable({
 	columns: [{
 			title: 'Sale end',
 			field: 'sale_end',
-			/*field: 'sale_end',
-			formatter: function (value) {
-				var date = new Date(value * 1000);
-				return date.toISOString();
-			},*/
+			formatter: saleEndDateFormatter,
 			sortable: true,
 		}, {
 			field: 'human_name',
@@ -141,6 +192,7 @@ $('#table').bootstrapTable({
 		}, {
 			field: 'current_price',
 			title: 'Price',
+			formatter: priceFormatter,
 			sortable: true,
 			filterControl: 'input',
 		}, {

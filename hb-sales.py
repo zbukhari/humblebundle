@@ -239,10 +239,10 @@ def writeDetails(detailList):
 		# Creating an ID field
 		detailList[i][u'id'] = i
 		# Simple manipulations
-		detailList[i][u'current_price'] = ' '.join(map(str, detailList[i][u'current_price']))
 		### We're going to process these via JavaScript
 		# detailList[i][u'delivery_methods'] = ', '.join(detailList[i][u'delivery_methods'])
 		# detailList[i][u'platforms'] = ', '.join(detailList[i][u'platforms'])
+		# detailList[i][u'current_price'] = ' '.join(map(str, detailList[i][u'current_price']))
 
 		if not detailList[i].has_key(u'user_rating'):
 			detailList[i][u'user_rating'] = None
@@ -250,10 +250,10 @@ def writeDetails(detailList):
 		# else:
 
 		# News to me - some sale items don't have a sale_end.
-		if (detailList[i][u'sale_end'] - time.time()) > 864000:
-			detailList[i][u'sale_end'] = 'More than 10 days'
-		else:
-			detailList[i][u'sale_end'] = datetime.isoformat(datetime.fromtimestamp(detailList[i][u'sale_end']))
+		# if (detailList[i][u'sale_end'] - time.time()) > 864000:
+		# 	detailList[i][u'sale_end'] = 'More than 10 days'
+		# else:
+		# 	detailList[i][u'sale_end'] = datetime.isoformat(datetime.fromtimestamp(detailList[i][u'sale_end']))
 
 		jsonData['rows'].append(detailList[i])
 
