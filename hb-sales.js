@@ -11,10 +11,10 @@ function getHeight() {
 function saleEndDateFormatter(value, row, index) {
 	var date = new Date(value * 1000);
 	if(date <= nowDate) {
-		dateStr = '<p class="text-muted" data-toggle="tooltip" data-placement="bottom" title="Item is still available but at full price.">Sale&nbsp;expired';
+		dateStr = '<p class="text-muted" data-toggle="tooltip" data-placement="bottom" title="Item may still available but at full price.">Sale&nbsp;expired';
 	} else {
 		var dateStr
-		if((date.getTime() - nowDate.getTime()) < 86400000)
+		if((date.getTime() - nowDate.getTime()) < (86400 * 1000))
 			dateStr = '<p class="text-danger" data-toggle="tooltip" data-placement="bottom" title="Less than 24 hours!">';
 		else
 			dateStr = '<p class="text-success">';
@@ -65,23 +65,66 @@ function priceFormatter(value, row, index) {
 	var saleDate = new Date(row['sale_end'] * 1000);
 
 	if(saleDate.getTime() <= nowDate.getTime()) {
-		// price = row['full_price'].join('&nbsp')
-		price = row['full_price'][0]
+		// price = '<s>' + row['current_price'][0] + '</s>&nbsp;' + row['full_price'][0]; // current_price full_price
+		price = row['full_price'][0] + '&nbsp;<s>' + row['current_price'][0] + '</s>'; // full_price current_price
 	} else {
-		// price = row['current_price'].join('&nbsp;');
 		price = row['current_price'][0];
 	}
 
-	return price;
+	// return price;
+	return parseFloat(Math.round(price * 100) / 100).toFixed(2);
+}
+
+// Unfortunately this leads to confusion unless we let the user know the full and current price.
+// We'll do that in the formatter but we'll sort based off of the current price.  Now the user
+// will know how much they could've saved for an expired sale :'-( Sorry ya'll!  My JS isn't
+// strong!
+function priceSorter(a, b, rowA, rowB) {
+	if(a > b)
+		return 1;
+	if(a < b)
+		return -1;
+
+	return 0;
 }
 
 function userRatingFormatter(value, row, index) {
-	var html = '-';
+	var html;
 
-	if(value)
-		html = value['steam_percent'] + '%&nbsp;|&nbsp;' + value['review_text'].replace(' ','&nbsp;');
+	if(value == null)
+		html = '-';
+	else
+		// We really should not get here.  value is not defined.  console.log shows it as such, JSON shows it as such, JS shows it as such but it ends up here and then fails on review_text.  hamlet_storefront - 2018-06-11.
+		if(typeof(value['review_text']) == 'undefined')
+			return '-';
+		else
+			// html = '<p value['steam_percent'] + '%&nbsp;|&nbsp;' + value['review_text'].replace(' ','&nbsp;');
+			html = '<p data-toggle="tooltip" data-placement="bottom" title="' +
+				value['steam_percent'] + '% of ' + value['steam_count'] + ' users gave a ' +
+				value['review_text'] + ' rating.' + '">' + value['steam_percent'] + '%</p>';
 
 	return html;
+}
+
+function userRatingSorter(a, b, rowA, rowB) {
+	var tmpA;
+	var tmpB;
+	if(rowA['user_rating'] == null)
+		tmpA = 0;
+	else
+		tmpA = a['steam_percent'];
+
+	if(rowB['user_rating'] == null)
+		tmpB = 0;
+	else
+		tmpB = b['steam_percent'];
+
+	if(tmpA > tmpB)
+		return 1;
+	if(tmpA < tmpB)
+		return -1;
+
+	return 0;
 }
 
 function humanNameFormatter(value, row, index) {
@@ -109,7 +152,7 @@ function deliveryMethodsFormatter(value, row, index) {
 				break;
 			// audio-download
 			case 'audio-download':
-				value[i] = '<i class="fas fa-music" title="audio-download"></i>';
+				value[i] = '<i class="fas fa-music" title="' + value[i] + '"></i>';
 				break;
 			// No reasonable icons in fa
 			case 'uplay':
@@ -137,6 +180,16 @@ function platformFormatter(value, row, index) {
 			case 'android':
 				value[i] = '<i class="fab fa-android" title="Android"></i>';
 				break;
+			// Poopy icons
+			case 'oculus-rift':
+			case 'vive':
+				value[i] = '<i class="fas fa-glasses" title="' + value[i] + '"></i>';
+				break;
+			// Also poopy icons
+			case 'mp3':
+			case 'wav':
+				value[i] = '<i class="fas fa-music" title="' + value[i] + '"></i>';
+				break;
 			default:
 				break;
 		}
@@ -152,6 +205,7 @@ $('#table').bootstrapTable({
 	classes: "table table-hover table-dark glyphicon",
 	data: jsonData,
 	search: false,
+	sortStable: true,
 	// height: 700,
 	// height: getHeight(),
 	// I can't find a way to do a logical and across truth values return by the filter-control extension :'-(
@@ -179,6 +233,7 @@ $('#table').bootstrapTable({
 */
 	showColumns: true,
 	// showRefresh: false,
+	sortName: 'sale_end',
 	detailView: true,
 	detailFormatter: detailFormatter,
 	clear: 'glyphicon-trash icon-clear fa-trash',
@@ -199,6 +254,8 @@ $('#table').bootstrapTable({
 			title: 'Price',
 			formatter: priceFormatter,
 			sortable: true,
+			sorter: priceSorter,
+			searchable: true,
 			filterControl: 'input',
 		}, {
 			field: 'delivery_methods',
@@ -215,10 +272,11 @@ $('#table').bootstrapTable({
 		}, {
 			field: 'user_rating',
 			title: 'User rating',
-			formatter: userRatingFormatter,
 			sortable: true,
 			searchable: true,
 			filterControl: 'input',
+			formatter: userRatingFormatter,
+			sorter: userRatingSorter,
 	}], // Close columns
 /*
 			field: 'other_links',
