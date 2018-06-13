@@ -71,7 +71,8 @@ function priceFormatter(value, row, index) {
 		price = row['current_price'][0];
 	}
 
-	return price;
+	// return price;
+	return parseFloat(Math.round(price * 100) / 100).toFixed(2);
 }
 
 // Unfortunately this leads to confusion unless we let the user know the full and current price.
@@ -151,7 +152,7 @@ function deliveryMethodsFormatter(value, row, index) {
 				break;
 			// audio-download
 			case 'audio-download':
-				value[i] = '<i class="fas fa-music" title="audio-download"></i>';
+				value[i] = '<i class="fas fa-music" title="' + value[i] + '"></i>';
 				break;
 			// No reasonable icons in fa
 			case 'uplay':
@@ -178,6 +179,16 @@ function platformFormatter(value, row, index) {
 				break;
 			case 'android':
 				value[i] = '<i class="fab fa-android" title="Android"></i>';
+				break;
+			// Poopy icons
+			case 'oculus-rift':
+			case 'vive':
+				value[i] = '<i class="fas fa-glasses" title="' + value[i] + '"></i>';
+				break;
+			// Also poopy icons
+			case 'mp3':
+			case 'wav':
+				value[i] = '<i class="fas fa-music" title="' + value[i] + '"></i>';
 				break;
 			default:
 				break;
