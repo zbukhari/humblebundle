@@ -309,6 +309,7 @@ def write_details(titles, hhf_titles=None):
 
 	# sale_end, human_name, current_price, delivery_methods, platforms, user_rating, handheld_friendly
 	for title in titles:
+		busted = False
 		row = {}
 		filename = os.path.sep.join([
 			cache_dir,
@@ -338,12 +339,20 @@ def write_details(titles, hhf_titles=None):
 				else:
 					row[k] = json_data[k]
 			else:
-				row[k] = None
+				if k == 'full_price':
+					busted = True
+					logging.warning('{} has no full_price key for whatever reason. Skipping.'.format(title))
+					break
+				else:
+					row[k] = None
 
 			if row['sale_end'] == None:
 				row['onsale'] = 'N'
 			else:
 				row['onsale'] = 'Y'
+
+		if busted:
+			continue
 
 		if hhf_titles:
 			if json_data['machine_name'] in hhf_titles:
