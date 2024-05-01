@@ -1,0 +1,9 @@
+@font-face {
+  font-family:'hb-icons';
+  src:url("hb-icons-1.woff2") format("woff2"),
+  url("hb-icons-2.woff") format("woff"),
+  url("hb-icons-3.ttf") format("truetype"),
+  url("hb-icons-4.ttf") format("opentype");
+  font-weight:normal;
+  font-style:normal
+}
